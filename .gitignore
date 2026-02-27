@@ -1,0 +1,16 @@
+!.gitignore
+!*.tex
+!*.png
+
+!*.pdf
+
+*.aux
+*.bbl
+*.blg
+*.log
+*.bcf
+*.out
+*.run.xml
+*.toc
+*.synctex.gz
+*.synctex(busy)
