@@ -3,4 +3,320 @@
 
 \section{Умова}
 
+Розглянемо генератор гами $\Gamma$, який з початкового стану переходить у наступний стан, а далі звичайним чином
+виробляє гаму. Відновіть початковий стан генератора за відрізком гами $\gamma$, якщо $\Gamma$ є комбінувальним
+генератором гами, що складається з двох ЛРЗ довжини 3 з поліномами зворотного зв’язку $p_{1}(x) = x^{3} \oplus x \oplus 1$
+i $p_{2}(x) = x^{3} \oplus x^{2} \oplus 1$ відповідно та комбінувальної функції $f(z_{1}, z_{2}) = z_{1} z_{2}$,
+а відрізок гами $\gamma$ дорівнює 1, 0, 1, 0, 0, 0.
+
 \section{Розв'язання}
+
+\subsection*{Крок 1. Рекурентні співвідношення}
+
+Виведемо для наших поліномів рекуренті співвідношення і намалюємо малюнок для зручності, виходячи з того, що для
+полінома $p(x) = x^3 + c_2 x^2 + c_1 x + c_0$ рекурентне йому співвідношення є наступним:
+\begin{equation*}
+    z_{n+3} = c_2 z_{n+2} \oplus c_1 z_{n+1} \oplus c_0 z_n
+\end{equation*}
+
+Тому для \textbf{LFSR 1:} $p_1(x) = x^3 \oplus x \oplus 1 = x^3 + 0 \cdot x^2 + 1 \cdot x + 1$ маємо:
+\begin{equation*}
+    \boxed{z_{n+3} = z_{n+1} \oplus z_n}
+\end{equation*}
+
+А для \textbf{LFSR 2:} $p_2(x) = x^3 \oplus x^2 \oplus 1 = x^3 + 1 \cdot x^2 + 0 \cdot x + 1$:
+\begin{equation*}
+    \boxed{z_{n+3} = z_{n+2} \oplus z_n}
+\end{equation*}
+
+На малюнку повна схема виглядатиме так (трохи кривенько, бо попросив ШІ по шаблону згенерувати, щоб я міг більше
+на розв'язку зосередитися):
+
+\begin{tikzpicture}[
+        >=Stealth,
+        box/.style={draw, minimum width=1cm, minimum height=1cm, thick},
+        xorgate/.style={draw, circle, minimum size=0.7cm, thick, inner sep=0pt},
+        fgate/.style={draw, isosceles triangle, isosceles triangle apex angle=60, shape border rotate=-90, minimum width=1.5cm, minimum height=1cm, thick},
+        every node/.style={font=\small}
+    ]
+
+    % === LFSR 1 ===
+    \node at (1.0, 3) {$p_1(x) = x^3 \oplus x \oplus 1$};
+
+    % Регістри
+    \node[box] (r1_2) at (0, 1) {$s_2$};
+    \node[box] (r1_1) at (1.5, 1) {$s_1$};
+    \node[box] (r1_0) at (3, 1) {$s_0$};
+
+    % XOR зверху
+    \node[xorgate] (xor1) at (-1.5, 1) {$\oplus$};
+
+    % Зворотний зв'язок
+    \draw[thick] (r1_2.north) -- ++(0, 0.5) -- ++(-1.5, 0) -- (xor1.north);
+    \draw[thick] (r1_0.north) -- ++(-0.45, 1) -- ++(-4.4, 0) -- (xor1.west);
+    \draw[thick, ->] (xor1.east) -- (r1_2.west);
+
+    % З'єднання регістрів
+    \draw[thick, ->] (r1_2.east) -- (r1_1.west);
+    \draw[thick, ->] (r1_1.east) -- (r1_0.west);
+
+    % Вихід f (трикутник)
+    \node[fgate] (f1) at (1.5, -1.5) {};
+    \node[left=0.1cm of f1.south] {$f$};
+
+    \draw[thick, ->] (r1_2.south) |- ($(f1.north) + (-0.4, 0.3)$) -- ++(0, -0.3);
+    \draw[thick, ->] (r1_1.south) -- (f1.north);
+    \draw[thick, ->] (r1_0.south) |- ($(f1.north) + (0.4, 0.3)$) -- ++(0, -0.3);
+
+    % Вихід z1
+    \draw[thick, ->] (f1.south) -- ++(0, -1) node[below] {$z_1$};
+
+
+    % === LFSR 2 ===
+    \node at (9.0, 3) {$p_2(x) = x^3 \oplus x^2 \oplus 1$};
+
+    % Регістри
+    \node[box] (r2_2) at (8, 1) {$s_2'$};
+    \node[box] (r2_1) at (9.5, 1) {$s_1'$};
+    \node[box] (r2_0) at (11, 1) {$s_0'$};
+
+    % XOR зверху
+    \node[xorgate] (xor2) at (6.5, 1) {$\oplus$};
+
+    % Зворотний зв'язок
+    \draw[thick] (r2_2.north) -- ++(0, 0.5) -- ++(-1.5, 0) -- (xor2.north);
+    \draw[thick] (r2_1.north) -- ++(-0.4, 1) -- ++(-3, 0) -- (xor2.west);
+    \draw[thick, ->] (xor2.east) -- (r2_2.west);
+
+    % З'єднання регістрів
+    \draw[thick, ->] (r2_2.east) -- (r2_1.west);
+    \draw[thick, ->] (r2_1.east) -- (r2_0.west);
+
+    % Вихід f (трикутник)
+    \node[fgate] (f2) at (9.5, -1.5) {};
+    \node[right=0.1cm of f2.south] {$f$};
+
+    \draw[thick, ->] (r2_2.south) |- ($(f2.north) + (-0.4, 0.3)$) -- ++(0, -0.3);
+    \draw[thick, ->] (r2_1.south) -- (f2.north);
+    \draw[thick, ->] (r2_0.south) |- ($(f2.north) + (0.4, 0.3)$) -- ++(0, -0.3);
+
+    % Вихід z2
+    \draw[thick, ->] (f2.south) -- ++(0, -1) node[below] {$z_2$};
+
+
+    % === Комбінувальна функція ===
+    \node[draw, rectangle, minimum width=1cm, minimum height=0.8cm, thick] (and) at (5.5, -5) {$\land$};
+    \node[above=1.2cm of and] {$f(z_1, z_2) = z_1 \cdot z_2$};
+
+    % З'єднання до AND
+    \draw[thick, ->] (f1.south) -- ++(0, -1) -- ++(4, 0) -- (and.north);
+    \draw[thick, ->] (f2.south) -- ++(0, -1) -- ++(-4, 0) -- (and.north);
+
+    % Вихід \gamma
+    \draw[thick, ->] (and.south) -- ++(0, -0.8) node[below] {$\gamma = 1, 0, 1, 0, 0, 0$};
+
+\end{tikzpicture}
+
+\subsection*{Крок 2. Потактова робота LFSR}
+
+Нехай початковий стан для LFSR 1 це $(a_0, a_1, a_2)$, а для LFSR 2: $(b_0, b_1, b_2)$.
+
+За умовою, генератор спочатку робить один крок переходу, тому перший біт гами відповідає $z_1$, а не $z_0$.
+
+\begin{center}
+    \begin{tabular}{c|c|c||c|c|c}
+        \toprule
+        \multicolumn{3}{c||}{\textbf{LFSR 1}: $z_{n+3} = z_{n+1} \oplus z_n$} & \multicolumn{3}{c}{\textbf{LFSR 2}: $z_{n+3} = z_{n+2} \oplus z_n$}                                                                 \\
+        \midrule
+        $n$                                                                   & $z_n$ (вираз)                                                       & $z_n$       & $n$ & $z_n$ (вираз)               & $z_n$       \\
+        \midrule
+        $0$                                                                   & $a_0$                                                               & ---         & $0$ & $b_0$                       & ---         \\
+        $1$                                                                   & $a_1$                                                               & $z_1^{(0)}$ & $1$ & $b_1$                       & $z_2^{(0)}$ \\
+        $2$                                                                   & $a_2$                                                               & $z_1^{(1)}$ & $2$ & $b_2$                       & $z_2^{(1)}$ \\
+        $3$                                                                   & $a_1 \oplus a_0$                                                    & $z_1^{(2)}$ & $3$ & $b_2 \oplus b_0$            & $z_2^{(2)}$ \\
+        $4$                                                                   & $a_2 \oplus a_1$                                                    & $z_1^{(3)}$ & $4$ & $b_2 \oplus b_1 \oplus b_0$ & $z_2^{(3)}$ \\
+        $5$                                                                   & $a_2 \oplus a_1 \oplus a_0$                                         & $z_1^{(4)}$ & $5$ & $b_1 \oplus b_0$            & $z_2^{(4)}$ \\
+        $6$                                                                   & $a_2 \oplus a_0$                                                    & $z_1^{(5)}$ & $6$ & $b_2 \oplus b_1$            & $z_2^{(5)}$ \\
+        \bottomrule
+    \end{tabular}
+\end{center}
+
+Для \textit{LFSR 1:}
+\begin{align*}
+    z_3 & = z_1 \oplus z_0 = a_1 \oplus a_0                                            \\
+    z_4 & = z_2 \oplus z_1 = a_2 \oplus a_1                                            \\
+    z_5 & = z_3 \oplus z_2 = (a_1 \oplus a_0) \oplus a_2 = a_2 \oplus a_1 \oplus a_0   \\
+    z_6 & = z_4 \oplus z_3 = (a_2 \oplus a_1) \oplus (a_1 \oplus a_0) = a_2 \oplus a_0
+\end{align*}
+
+Для \textit{LFSR 2:}
+\begin{align*}
+    z_3 & = z_2 \oplus z_0 = b_2 \oplus b_0                                            \\
+    z_4 & = z_3 \oplus z_1 = (b_2 \oplus b_0) \oplus b_1 = b_2 \oplus b_1 \oplus b_0   \\
+    z_5 & = z_4 \oplus z_2 = (b_2 \oplus b_1 \oplus b_0) \oplus b_2 = b_1 \oplus b_0   \\
+    z_6 & = z_5 \oplus z_3 = (b_1 \oplus b_0) \oplus (b_2 \oplus b_0) = b_2 \oplus b_1
+\end{align*}
+
+\subsection*{Крок 3. Вихід (рівняння для гами)}
+
+Гама: $\gamma_i = z_1^{(i)} \cdot z_2^{(i)}$ (операція AND).
+
+\begin{center}
+    \begin{tabular}{c|c|c|c|c}
+        \toprule
+        $i$ & $\gamma_i$ & $z_1^{(i)}$                 & $z_2^{(i)}$                 & Рівняння                                                 \\
+        \midrule
+        $0$ & $1$        & $a_1$                       & $b_1$                       & $a_1 \cdot b_1 = 1$                                      \\
+        $1$ & $0$        & $a_2$                       & $b_2$                       & $a_2 \cdot b_2 = 0$                                      \\
+        $2$ & $1$        & $a_1 \oplus a_0$            & $b_2 \oplus b_0$            & $(a_1 \oplus a_0) \cdot (b_2 \oplus b_0) = 1$            \\
+        $3$ & $0$        & $a_2 \oplus a_1$            & $b_2 \oplus b_1 \oplus b_0$ & $(a_2 \oplus a_1) \cdot (b_2 \oplus b_1 \oplus b_0) = 0$ \\
+        $4$ & $0$        & $a_2 \oplus a_1 \oplus a_0$ & $b_1 \oplus b_0$            & $(a_2 \oplus a_1 \oplus a_0) \cdot (b_1 \oplus b_0) = 0$ \\
+        $5$ & $0$        & $a_2 \oplus a_0$            & $b_2 \oplus b_1$            & $(a_2 \oplus a_0) \cdot (b_2 \oplus b_1) = 0$            \\
+        \bottomrule
+    \end{tabular}
+\end{center}
+
+\subsection*{Крок 4. Розв'язання системи}
+
+Якщо $\gamma_{i} = 1$, то \textbf{обов'язково} обидва множники дорівнюють 1.
+
+З $\gamma_0 = 1$:
+\begin{equation*}
+    a_1 = 1, \quad b_1 = 1
+\end{equation*}
+
+З $\gamma_2 = 1$:
+\begin{equation*}
+    a_1 \oplus a_0 = 1, \quad b_2 \oplus b_0 = 1
+\end{equation*}
+
+\noindent Підставляємо $a_1 = 1$:
+\begin{equation*}
+    1 \oplus a_0 = 1 \quad \Rightarrow \quad a_0 = 0
+\end{equation*}
+
+\noindent Маємо:
+\begin{equation*}
+    \boxed{a_0 = 0, \quad a_1 = 1, \quad b_1 = 1, \quad b_2 \oplus b_0 = 1}
+\end{equation*}
+
+\noindent Якщо $\gamma_i = 0$, то \textbf{хоча б один} множник (під множенням насправді приховується $\wedge$) 
+дорівнює 0. Підставляємо відомі значення:
+
+При $\gamma_1 = 0$: $a_2 \cdot b_2 = 0$
+\begin{equation*}
+    a_2 = 0 \quad \text{або} \quad b_2 = 0
+\end{equation*}
+
+При $\gamma_3 = 0$: $(a_2 \oplus a_1) \cdot (b_2 \oplus b_1 \oplus b_0) = 0$
+\begin{align*}
+    & (a_2 \oplus 1) \cdot (b_2 \oplus 1 \oplus b_0) = 0 \\
+    & a_2 = 1 \quad \text{або} \quad b_2 \oplus b_0 = 1 \text{ -- це вже отримували вище}
+\end{align*}
+
+При $\gamma_4 = 0$: $(a_2 \oplus a_1 \oplus a_0) \cdot (b_1 \oplus b_0) = 0$
+\begin{align*}
+    & (a_2 \oplus 1 \oplus 0) \cdot (1 \oplus b_0) = 0 \\
+    & (a_2 \oplus 1) \cdot (1 \oplus b_0) = 0 \\
+    & a_2 = 1 \quad \text{або} \quad b_0 = 1
+\end{align*}
+
+При $\gamma_5 = 0$: $(a_2 \oplus a_0) \cdot (b_2 \oplus b_1) = 0$
+\begin{align*}
+    & (a_2 \oplus 0) \cdot (b_2 \oplus 1) = 0 \\
+    & a_2 = 0 \quad \text{або} \quad b_2 = 1
+\end{align*}
+
+\noindent При цьому всьому бачимо, що виникає три обмеження на наші диз'юнкти:
+\begin{enumerate}
+    \item $a_2 = 0$ або $b_2 = 0$ (з $\gamma_{1}$)
+    \item $a_2 = 1$ або $b_0 = 1$ (з $\gamma_{4}$)
+    \item $a_2 = 0$ або $b_2 = 1$ (з $\gamma_{5}$)
+\end{enumerate}
+
+\noindent Тобто треба розглянути два наступні випадки:
+
+\noindent \textbf{Випадок 1:} $a_2 = 0$
+
+З обмеження (2): $a_2 = 1$ або $b_0 = 1$. Оскільки $a_2 = 0 \neq 1$, маємо $b_0 = 1$.
+
+З $b_2 \oplus b_0 = 1$: $b_2 \oplus 1 = 1$, тому $b_2 = 0$.
+
+Тоді з обмеження (1): $a_2 = 0$ --- виконано
+
+А з обмеження (3): $a_2 = 0$ --- виконано
+
+\begin{equation*}
+    \text{Розв'язком є: } (a_0, a_1, a_2) = (0, 1, 0), \quad (b_0, b_1, b_2) = (1, 1, 0)
+\end{equation*}
+
+\noindent \textbf{Випадок 2:} $a_2 = 1$
+
+З обмеження (1): $a_2 = 0$ або $b_2 = 0$. Оскільки $a_2 = 1$, то $b_2 = 0$.
+
+З $b_2 \oplus b_0 = 1$: $0 \oplus b_0 = 1$, тому $b_0 = 1$.
+
+Перевіряємо обмеження (3): $a_2 = 0$ або $b_2 = 1$.
+
+Маємо $a_2 = 1 \neq 0$ і $b_2 = 0 \neq 1$ -- обмеження не виконується! Караул!
+
+Тобто випадок 2 не можливий.
+
+\subsection*{Крок 5. Це кінець (відповідь)}
+
+Отримали єдиний (на диво) початковий стан генератора:
+\begin{equation*}
+    \boxed{
+        \begin{aligned}
+            \text{LFSR 1:} \quad (s_0, s_1, s_2)    & = (0, 1, 0) \\
+            \text{LFSR 2:} \quad (s_0', s_1', s_2') & = (1, 1, 0)
+        \end{aligned}
+    }
+\end{equation*}
+
+P.S. Але після такої задачі хочеться вмерти
+
+\subsection*{Крок 6. Ah shit, here we go again! (Перевірка)}
+
+В опів на дванадцяту ночі, то перевірку я лишив на ШІ, сподіваюся він правильно її зробив (ну, принаймні результат 
+збігся). Все що тут необхідно було, це підставити $(a_0, a_1, a_2) = (0, 1, 0)$ і $(b_0, b_1, b_2) = (1, 1, 0)$ та 
+отримати ланцюжок $\gamma = 1, 0, 1, 0, 0, 0$ з умови.
+
+Виходи LFSR 1:
+\begin{align*}
+    z_1^{(0)} & = a_1 = 1                                             \\
+    z_1^{(1)} & = a_2 = 0                                             \\
+    z_1^{(2)} & = a_1 \oplus a_0 = 1 \oplus 0 = 1                     \\
+    z_1^{(3)} & = a_2 \oplus a_1 = 0 \oplus 1 = 1                     \\
+    z_1^{(4)} & = a_2 \oplus a_1 \oplus a_0 = 0 \oplus 1 \oplus 0 = 1 \\
+    z_1^{(5)} & = a_2 \oplus a_0 = 0 \oplus 0 = 0
+\end{align*}
+
+Виходи LFSR 2:
+\begin{align*}
+    z_2^{(0)} & = b_1 = 1                                             \\
+    z_2^{(1)} & = b_2 = 0                                             \\
+    z_2^{(2)} & = b_2 \oplus b_0 = 0 \oplus 1 = 1                     \\
+    z_2^{(3)} & = b_2 \oplus b_1 \oplus b_0 = 0 \oplus 1 \oplus 1 = 0 \\
+    z_2^{(4)} & = b_1 \oplus b_0 = 1 \oplus 1 = 0                     \\
+    z_2^{(5)} & = b_2 \oplus b_1 = 0 \oplus 1 = 1
+\end{align*}
+
+\subsubsection*{Обчислення гами:}
+
+\begin{center}
+    \begin{tabular}{c|c|c|c|c}
+        \toprule
+        $i$ & $z_1^{(i)}$ & $z_2^{(i)}$ & $\gamma_i = z_1^{(i)} \cdot z_2^{(i)}$ & Очікуване \\
+        \midrule
+        $0$ & $1$         & $1$         & $1 \cdot 1 = 1$                        & $1$       \\
+        $1$ & $0$         & $0$         & $0 \cdot 0 = 0$                        & $0$       \\
+        $2$ & $1$         & $1$         & $1 \cdot 1 = 1$                        & $1$       \\
+        $3$ & $1$         & $0$         & $1 \cdot 0 = 0$                        & $0$       \\
+        $4$ & $1$         & $0$         & $1 \cdot 0 = 0$                        & $0$       \\
+        $5$ & $0$         & $1$         & $0 \cdot 1 = 0$                        & $0$       \\
+        \bottomrule
+    \end{tabular}
+\end{center}
+
+\noindent \textbf{Результат:} $\gamma = 1, 0, 1, 0, 0, 0$, такий як і мав бути!
