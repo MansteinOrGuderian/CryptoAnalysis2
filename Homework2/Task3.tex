@@ -1,0 +1,145 @@
+\chapter{}
+\label{chap:3}
+
+\section{Умова}
+
+Нехай $A$ -- матриця з дійсними елементами, розміру $n \times k$ i рангу $n$, найперший (зліва) елемент кожного
+рядку якої є додатним числом. Довести, що відношення часткового впорядкування $\preceq$ на множині $\mathbb{N}_{0}^{n}$
+таким, що $\alpha \preceq \beta \Leftrightarrow \alpha \cdot A \preceq_{\text{lex}} \beta \cdot A$,
+$\alpha, \beta \in \mathbb{N}_{0}^{n}$ є мономіальним впорядкуванням.
+
+\section{Розв'язання}
+
+У нас є матриця $A = (a_{ij})_{n \times k}$, $\text{rank}(A) = n$, $a_{i1} > 0, \forall \, i = \overline{1, n}$. 
+
+\noindent Відношення, в т.ч. лексикографічного порядку, задається так:
+\begin{equation*}
+    \alpha \preceq_{\text{lex}} \beta \Leftrightarrow \exists \, i \in \overline{1, k} : \alpha_{1} = \beta_{1}, \ldots, \alpha_{i-1} = \beta_{i-1}, \, \alpha_{i} < \beta_{i}
+\end{equation*}
+\begin{equation*}
+    \alpha \preceq \beta \Leftrightarrow \alpha A \preceq_{\text{lex}} \beta A
+\end{equation*}
+
+Нам для доведення необхідно перевірити виконання шести умов: три умови на часткове впорядкування, одна умова на лінійне 
+впорядкування і дві умови на мономіальне впорядкування.
+
+\subsection{Часткове впорядкування:}
+
+\textbf{\RNum{1}. Рефлексивність:} $\alpha \preceq \alpha$
+
+Оскільки $\alpha A = \alpha A$, то за рефлексивністю лексикографічного порядку маємо $\alpha A \preceq_{\text{lex}} \alpha A$. 
+Отже, $\alpha \preceq \alpha$.
+
+\noindent \textbf{\RNum{2}. Антисиметричність:} $\alpha \preceq \beta, \, \beta \preceq \alpha \Rightarrow \alpha = \beta$
+
+Нехай $\alpha \preceq \beta$ і $\beta \preceq \alpha$. Тоді:
+\begin{equation*}
+    \alpha A \preceq_{\text{lex}} \beta A \quad \text{і} \quad \beta A \preceq_{\text{lex}} \alpha A
+\end{equation*}
+
+За антисиметричністю лексикографічного порядку маємо, що: $\alpha A = \beta A$.
+
+Оскільки $\text{rank}(A) = n$, і $\exists \, f: \alpha \xrightarrow{f} \alpha A$ є ін'єктивним (різні $\alpha$ дають різні $\alpha A$), 
+то з $\alpha A = \beta A$ випливає $\alpha = \beta$.
+
+\noindent \textbf{\RNum{3} Транзитивність:} $\alpha \preceq \beta, \, \beta \preceq \gamma \Rightarrow \alpha \preceq \gamma$
+
+Нехай $\alpha \preceq \beta$ і $\beta \preceq \gamma$. Тоді:
+\begin{equation*}
+    \alpha A \preceq_{\text{lex}} \beta A \quad \text{і} \quad \beta A \preceq_{\text{lex}} \gamma A
+\end{equation*}
+
+За транзитивністю лексикографічного порядку: $\alpha A \preceq_{\text{lex}} \gamma A$, і отже, $\alpha \preceq \gamma$.
+
+\subsection{Лінійне впорядкування:}
+
+\textbf{\RNum{4} Порівнянність (повнота):} $\alpha \preceq \beta$ або $\beta \preceq \alpha$
+
+Для будь-яких векторів $\alpha A$ і $\beta A$ за повнотою самого лексикографічного порядку:
+\begin{equation*}
+    \alpha A \preceq_{\text{lex}} \beta A \quad \text{або} \quad \beta A \preceq_{\text{lex}} \alpha A
+\end{equation*}
+
+Тому $\alpha \preceq \beta$ або $\beta \preceq \alpha$.
+
+\subsection{Мономіальне впорядкування:}
+
+\textbf{\RNum{5} Продовження відношення $\leq$:} $\mathbf{0} \preceq \alpha, \forall \, \alpha \in \mathbb{N}_0^n$
+
+$\mathbf{0} = (0, 0, \ldots, 0) \in \mathbb{N}_0^n$ --- нульовий вектор. У термінах мономів він відповідатиме за 
+$x_1^0 x_2^0 \ldots x_n^0 = 1$.
+
+Символом $\leq$ позначає покоординатне порівняння:
+\begin{equation*}
+    \alpha \leq \beta \quad \Leftrightarrow \quad \alpha_i \leq \beta_i \text{ для всіх } i = 1, \ldots, n
+\end{equation*}
+Нам достатньо перевірити лише $\mathbf{0} \preceq \alpha$.
+
+\noindent Якщо виконується:
+\begin{enumerate}
+    \item $\mathbf{0} \preceq \alpha, \forall \, \alpha$
+    \item Сумісність з додаванням (умова \RNum{6} нижче)
+\end{enumerate}
+то з цього випливатиме продовження $\leq$.
+
+\noindent Нехай $\alpha \leq \beta$ покоординатно. Тоді $\beta - \alpha \in \mathbb{N}_0^n$. Очевидно, що 
+$\mathbf{0} \preceq \beta - \alpha$. Додамо $\alpha$ до обох сторін:
+\begin{equation*}
+    \mathbf{0} + \alpha \preceq (\beta - \alpha) + \alpha \quad \Rightarrow \quad \alpha \preceq \beta
+\end{equation*}
+
+\noindent Обчислимо добуток $\mathbf{0} \cdot A = (0, 0, \ldots, 0) \in \mathbb{R}^k$. Для $\alpha = (\alpha_1, \ldots, \alpha_n) \in \mathbb{N}_0^n$ 
+перша координата вектора $\alpha A$ матиме вигляд:
+\begin{equation*}
+    (\alpha A)_1 = \sum_{i=1}^{n} \alpha_i \cdot a_{i1}
+\end{equation*}
+
+Оскільки $\alpha_i \geq 0 \text{ і } a_{i1} > 0, \forall \, i$, то і $(\alpha A)_1 \geq 0$.
+
+Порівняємо вектори $\mathbf{0} \cdot A = (0, 0, \ldots)$ і $\alpha A = ((\alpha A)_1, \ldots)$:
+\begin{itemize}
+    \item Якщо $(\alpha A)_1 > 0$, то $0 < (\alpha A)_1$, отже $(0, \ldots) \preceq_{\text{lex}} \alpha A$.
+    \item Якщо $(\alpha A)_1 = 0$, то це можливо лише при $\alpha_i = 0, \forall \, i$, тобто $\alpha = \mathbf{0}$.
+\end{itemize}
+
+Отже, $\mathbf{0} A \preceq_{\text{lex}} \alpha A$ для всіх $\alpha$, тобто $\mathbf{0} \preceq \alpha$.
+
+\noindent \textbf{\RNum{6} Сумісність за додаванням:} $\alpha \preceq \beta \Rightarrow \alpha + \gamma \preceq \beta + \gamma$
+
+Нехай $\alpha \preceq \beta$, тобто $\alpha A \preceq_{\text{lex}} \beta A$.
+
+Тоді обчислимо:
+\begin{equation*}
+    (\alpha + \gamma) A = \alpha A + \gamma A
+\end{equation*}
+\begin{equation*}
+    (\beta + \gamma) A = \beta A + \gamma A
+\end{equation*}
+
+Оскільки сам лексикографічний порядок є сумісним за додаванням, тобто:
+\begin{equation*}
+    \text{Якщо } u \preceq_{\text{lex}} v, \text{ то } u + w \preceq_{\text{lex}} v + w
+\end{equation*}
+\indent Маємо:
+\begin{equation*}
+    \alpha A + \gamma A \preceq_{\text{lex}} \beta A + \gamma A
+\end{equation*}
+
+Отже, $(\alpha + \gamma) A \preceq_{\text{lex}} (\beta + \gamma) A$, тобто $\alpha + \gamma \preceq \beta + \gamma$.
+
+Всі шість умов виконано, а отже, $\preceq$ є мономіальним впорядкуванням на $\mathbb{N}_0^n$.
+
+% $\alpha, \beta \in \mathbb{N}_{0}^{n}$, $\preceq_{\text{lex}}$ -- мономіальне на $\mathbb{N}_{0}^{n}$ $\xRightarrow{def}$ 
+% $\alpha \preceq_{\text{lex}} \beta \Leftrightarrow \exists \, i \in \overline{1, n} : \alpha_{1} = \beta_{1}, \ldots \alpha_{i-1} = \beta_{i-1}, \alpha_{i} < \beta_{i}$
+
+% Доведення:
+% Для цього необхідно перевірити виконання шістьох умов:
+% три умови на часткове впорядкування
+%     рефлексивність: ($\alpha \preceq_{\text{lex}} \alpha$)
+%     антисиметричність: ($\alpha \preceq_{\text{lex}} \beta, \, \beta \preceq_{\text{lex}} \alpha \Rightarrow \alpha = \beta$)
+%     транзитивність: ($\alpha \preceq_{\text{lex}} \beta, \, \beta \preceq_{\text{lex}} \gamma \Rightarrow \alpha \preceq_{\text{lex}} \gamma$)
+% одна умова -- лінійне впорядкування
+%     умова порівняності (повноти): ($\alpha \preceq_{\text{lex}} \beta$ або $\beta \preceq_{\text{lex}} \alpha$)
+% дві умови -- мономіальне впорядкування
+%     відношення $\preceq_{\text{lex}}$ є продовженням відношення $\leq$: ($\forall \, \alpha, \beta \in \mathbb{N}_{0}^{n} : \alpha \leq \beta \Rightarrow \alpha \preceq_{\text{lex}} \beta$)
+%     відношення $\preceq_{\text{lex}}$ зберігається, при додаванні $\gamma$, $\gamma \in \mathbb{N}_{0}^{n}$ з обох сторін
