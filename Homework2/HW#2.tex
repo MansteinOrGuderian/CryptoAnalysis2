@@ -1,0 +1,88 @@
+\documentclass{report}
+\input{../packages.tex}
+% \title{}
+% \author{}
+% \date{} % empty {} == no date
+
+\begin{document}
+\input{cover.tex}
+
+\makeatletter
+\renewcommand{\tableofcontents}{
+    \clearpage
+    \thispagestyle{empty}
+    \begin{center}
+            \bfseries\Large\MakeUppercase{Зміст}
+    \end{center}
+
+    \addvspace{42pt}
+    \@starttoc{toc}
+}
+\renewcommand{\@pnumwidth}{2em}
+\renewcommand{\@tocrmarg}{3em}
+\makeatother
+
+\tableofcontents
+\cleardoublepage
+\pagenumbering{arabic}
+\setcounter{page}{1}
+\newpage
+
+% Clear the header and footer
+\fancyhead{}
+\fancyfoot{}
+% Set the right side of the footer to be the page number
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\fancyfoot[C]{
+    \begin{textblock*}{2cm}(20cm,27.3cm) % bottom right corner of A4
+        \small\thepage
+\end{textblock*}
+}
+\pagestyle{fancy}
+
+\theoremstyle{plain}
+\newtheorem{definition}{Означення}%[section]
+\newtheorem{theorem}{Теорема}[chapter]
+\newtheorem{claim}{Твердження}[chapter]
+
+\theoremstyle{definition}
+\newtheorem*{remark}{Зауваження:}
+\newtheorem*{example}{Приклад}
+\newtheorem{lemma}{Лема}[chapter]
+
+\renewcommand{\chaptername}{Завдання \No}
+\renewcommand*{\proofname}{Доведення:}
+\newcommand{\Mod}[1]{\ (\mathrm{mod}\ #1)}
+
+\NewDocumentCommand{\MakeWaveComment}{m}{
+\ifmmode % if math mode, make indent before bigger
+    \hspace{3pt}
+\fi
+\tikz[baseline={(textnode.base)}]{
+    \draw[decorate, decoration={snake, segment length=0.35cm, amplitude=1.5pt}] % Left wave line
+    (0,0) -- ++(0,1.5);
+
+    \node[anchor=base west, inner sep = 0.5pt] (textnode) at (0.15,0.75) {#1}; % Text node
+
+    \draw[decorate, decoration={snake, segment length=0.35cm, amplitude=1.5pt}] % Right wave line
+    ([xshift=0.2cm, yshift=-0.75cm]textnode.east) -- ++(0,1.5);
+}
+\ifmmode % if math mode, make indent after bigger
+    \hspace{3pt}
+\fi
+}
+
+\NewDocumentCommand{\inbuildRef}{mm}{
+    \hyperref[{#1}]{#2}
+}
+
+\newcommand{\RNum}[1]{\uppercase\expandafter{\romannumeral #1\relax}} % exp: \RNum{7} -> VII
+\renewcommand*{\mkbibacro}[1]{#1}
+\DeclareFieldFormat{url}{\href{#1}{\mkbibacro{(URL)}}}
+
+\input{Task1.tex}
+\input{Task2.tex}
+\input{Task3.tex}
+
+\end{document}

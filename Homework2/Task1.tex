@@ -1,0 +1,36 @@
+\chapter{}
+\label{chap:1}
+
+\section{Умова}
+
+Нехай $f \in B_{n}$. Доведіть, що $\left|\text{Ann}(f)\right| = 2^{2^{n} - \Vert f\Vert}$, де 
+$\Vert f\Vert$ -- вага функції $f$.
+
+\section{Розв'язання}
+
+Анулятор функції $f$ в кільці булевих функцій довжини $B_{n}$ це:
+\begin{equation*}
+    \text{Ann}(f) = \left\{ g \in B_{n} : f \cdot g = 0\right\}
+\end{equation*}
+
+\noindent Вага функції $f$ -- це кількість точок, де функція $f$ приймає значення один $f(a) = 1$:
+\begin{equation*}
+    \Vert f \Vert = \left|\left\{a \in \left\{0, 1\right\}^{n} : f(a) = 1\right\}\right|
+\end{equation*}
+
+Функція $g \in \text{Ann}(f)$ тоді і лише тоді, коли $f \cdot g = 0$. Тобто для 
+$\left( f \cdot g\right) (a) = f(a) \cdot g(a) = 0$, для всіх $a \in \left\{0, 1\right\}^{n}$.
+
+Розглянемо два випадки:
+\begin{enumerate}
+    \item Якщо $f(a) = 1$, то $f(a) \cdot g(a) = 1 \cdot g(a) = g(a)$ -- щоб було нуль, має бути $g(a) = 0$.
+    \item Якщо $f(a) = 0$, то $f(a) \cdot g(a) = 0 \cdot g(a) = 0$ -- незалежно від значення $g(a)$.
+\end{enumerate}
+В точках $a$, де $f(a) = 1$ має бути $g(a) = 0$. Таких точок $a$ рівно $\Vert f\Vert$ штук (згідно означення $\Vert f \Vert$).
+
+Тоді точок $a$, де $f(a) = 0$, $2^{n} - \Vert f\Vert$ штук. Значення функції може бути $g(a) = 0$ як і $g(a) = 1$ 
+(2 варіанти). Тому загальна кількість функцій $g$ дорівнює $2^{2^{n} - \Vert f\Vert}$, де $2^{n}$ -- загальна 
+кількість векторів $a$ довжини $n$. Тобто:
+\begin{equation*}
+    \text{Ann}(f) = 2^{2^{n} - \Vert f\Vert}
+\end{equation*}
