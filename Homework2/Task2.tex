@@ -1,0 +1,115 @@
+\chapter{}
+\label{chap:2}
+
+\section{Умова}
+Нехай $I$ -- ідеал кiльця $B_{n}$. Обчислити потужність $\left| I\right|$, якщо:
+\begin{enumerate}[label=\alph*)]
+    \item $n$ є парним числом та $I = \langle x_{1}x_{2}, \, x_{3}x_{4}, \, \ldots, \, x_{n}x_{n-1} \rangle$;
+    \item $n \geq 2$ та $I = \langle x_{1}x_{2}, \, x_{1}x_{2}x_{3}, \, \ldots , \, x_{1}x_{2} \ldots x_{n}\rangle$.
+\end{enumerate}
+
+\section{Розв'язання}
+
+Булеве кільце $B_{n}$ від $n$ змінних, еквівалентно фактор кільцю $\mathbb{F}_2[x_1, \ldots, x_n] / \langle x_1^2 \oplus x_1, \ldots, x_n^2 \oplus x_n \rangle$. 
+Тобто кожен його елемент можна представити як многочлен, де кожна зі змінних $x_{i}$ входить не більше чим в першому 
+степені, тобто мономи. $\left|B_{n}\right| = 2^{2^{n}}$.
+
+В ідеалі $I \subseteq B_n$ множина нулів складається з усіх точок, в яких кожна функція з ідеалу обертається в нуль:
+\begin{equation*}
+    V(I) = \left\{a \in \left\{0,1\right\}^n : f(a) = 0, \, \forall \, f \in I\right\}
+\end{equation*}
+
+Еквівалентне означення: Для ідеалу $I = \langle g_1, \ldots, g_m \rangle$ достатньо перевірити лише генератори:
+\begin{equation*}
+    V(I) = \left\{a \in \left\{0,1\right\}^n : g_1(a) = g_2(a) = \ldots = g_m(a) = 0\right\}
+\end{equation*}
+
+\noindent Функція $f \in I \Leftrightarrow f(a) = 0$ для всіх $a \in V(I)$.
+
+Отже:
+\begin{itemize}
+    \item На точках $a$ з $V(I)$ значення функцій з $I$ фіксоване (дорівнює 0)
+    \item На решті $2^n - |V(I)|$ точок значення є довільним (0 або 1)
+\end{itemize}
+
+Тому потужність ідеалу:
+\begin{equation}
+    \label{eq:ideal_power}
+    |I| = 2^{2^n - |V(I)|}
+\end{equation}
+
+\subsection{Пункт а)}
+
+\textbf{Дано:} $n$ парне, $I = \langle x_{1}x_{2}, \, x_{3}x_{4}, \, \ldots, \, x_{n}x_{n-1} \rangle$.
+
+Знайдемо $V(I)$ як перетин множин нулів:
+\begin{equation*}
+    V(I) = V(x_1 x_2) \cap V(x_3 x_4) \cap \ldots \cap V(x_{n-1} x_n)
+\end{equation*}
+
+Для деякої пари $(x_{2k-1}, x_{2k})$:
+\begin{equation*}
+    V(x_{2k-1} x_{2k}) \overset{def}{=} \left\{a \in \left\{0,1\right\}^n : a_{2k-1} \cdot a_{2k} = 0\right\}
+\end{equation*}
+
+З цього можна зробити висновок, що $a_{2k-1} = 0$ або $a_{2k} = 0$. Отже пара $(a_{2k-1}, a_{2k})$ може набувати 
+3 значення з 4: $(0, 0)$, $(0, 1)$, $(1, 0)$. Оскільки пари є незалежними між собою, а їх кількість $\frac{n}{2}$, 
+кожна має 3 допустимими варіантами, то:
+\begin{equation*}
+    |V(I)| = 3^{n/2}
+\end{equation*}
+
+Тоді для обчислення $|I|$ використаємо вище згадану формулу~\eqref{eq:ideal_power}:
+\begin{equation*}
+    |I| = 2^{2^n - |V(I)|} = 2^{2^n - 3^{n/2}}
+\end{equation*}
+
+\subsection{Пункт б)}
+
+\textbf{Дано:} $n \geq 2$, $I = \langle x_{1}x_{2}, \, x_{1}x_{2}x_{3}, \, \ldots , \, x_{1}x_{2} \ldots x_{n}\rangle$.
+
+Можна сказати, що всі генератори є кратними до першого ($x_1 x_2$):
+\begin{equation*}
+    x_1 x_2 x_3 = x_3 \cdot (x_1 x_2) \in \langle x_1 x_2 \rangle
+\end{equation*}
+\begin{equation*}
+    x_1 x_2 x_3 x_4 = x_3 x_4 \cdot (x_1 x_2) \in \langle x_1 x_2 \rangle
+\end{equation*}
+\begin{equation*}
+    \vdots
+\end{equation*}
+\begin{equation*}
+    x_1 x_2 \ldots x_n = x_3 x_4 \ldots x_n \cdot (x_1 x_2) \in \langle x_1 x_2 \rangle
+\end{equation*}
+
+$\Rightarrow$ (?) всі генератори належать ідеалу $\langle x_1 x_2 \rangle$ (щось я в коректності цього твердження 
+сумніваюся):
+\begin{equation*}
+    I = \langle x_1 x_2 \rangle
+\end{equation*}
+Тоді $V(I)$ -- множина всіх точок, де $a_1 = 0$ або $a_2 = 0$, оскільки:
+\begin{equation*}
+    V(I) = V(x_1 x_2) = \left\{a \in \left\{0,1\right\}^n : a_1 \cdot a_2 = 0\right\}
+\end{equation*}
+
+Обчислимо $|V(I)|$, але, певно, доведеться формулу включення-виключення застосовувати обчислюючи доповнення спершу:
+\begin{equation*}
+    \overline{V(I)} = \left\{a : a_1 = 1 \text{ і } a_2 = 1\right\}
+\end{equation*}
+Це будуть такі точки $a$, де перші дві координати фіксовані значенням $1$, а решта $n - 2$ координат довільні, 
+тобто $(1, 1, 0/1, \ldots, 0/1)$. Тоді:
+\begin{equation*}
+    |\overline{V(I)}| = 2^{n-2}
+\end{equation*}
+А тоді знайдемо $|V(I)|$, віднявши $|\overline{V(I)}|$ від загальної кількості:
+\begin{equation*}
+    |V(I)| = 2^n - 2^{n-2} = 2^{n-2}(4 - 1) = 3 \cdot 2^{n-2}
+\end{equation*}
+Ну і власне застосуємо вище згадану формулу~\eqref{eq:ideal_power}:
+\begin{equation*}
+    |I| = 2^{2^n - |V(I)|} = 2^{2^n - 3 \cdot 2^{n-2}} = 2^{2^{n-2}}
+\end{equation*}
+Отже:
+\begin{equation*}
+    |I| = 2^{2^{n-2}}
+\end{equation*}
