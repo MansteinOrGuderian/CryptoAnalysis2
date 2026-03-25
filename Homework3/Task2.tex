@@ -2,7 +2,69 @@
 \label{chap:2}
 
 \section{Умова}
-Нехай $f = x_{1} \oplus x_{2} \oplus x_{1}x_{2} \oplus x_{1}x_{3}$ та $f, f_{1}, f_{2}, f_{3} \in B_{3}$. Обчислити 
+Нехай $f = x_{1} \oplus x_{2} \oplus x_{1}x_{2} \oplus x_{1}x_{3}$ та $f, f_{1}, f_{2}, f_{3} \in B_{3}$. Обчислити
 $\text{Res} (f; f_{1}, f_{2}, f_{3})$, якщо $f_{1} = x_{2} \oplus 1$, $f_{2} = x_{2}x_{3}$, $f_{3} = x_{1}x_{2}x_{3}$;
 
 \section{Розв'язання}
+
+Як і під час практичної, вважатимемо що задано $\preceq_{\mathrm{drl}}$ ($x_1 \succ x_2 \succ x_3$). Тоді
+розташувавши мономи $f$ в порядку спадання:
+\begin{equation*}
+    x_1 x_2 \succ_{\mathrm{drl}} x_1 x_3 \succ_{\mathrm{drl}} x_1 \succ_{\mathrm{drl}} x_2,
+\end{equation*}
+можна визначити старший моном  -- $x_1 x_2$.
+
+У вигляді кутового ділення це має такий вигляд:
+\begin{center}
+    \renewcommand{\arraystretch}{1.6}
+    \setlength{\tabcolsep}{10pt}
+    \begin{tabular}{r|c|c|c}
+                                                                        & $f_1 = x_2 \oplus 1$                                                                      & $f_2 = x_2 x_3$ & $f_3 = x_1 x_2 x_3$ \\[2pt]
+        \hline
+        \rule{0pt}{14pt}
+        $\oplus\;\; f = x_1 x_2 \oplus x_1 x_3 \oplus x_1 \oplus x_2$   & \multirow{2}{*}{$x_1$}                                                                    &                 &                     \\
+        $\;\;\;\;\underline{x_1 x_2 \oplus x_1}$                        &                                                                                           &                 &                     \\[2pt]
+        \hline
+        \rule{0pt}{14pt}
+        $\oplus\;\; x_1 x_3 \oplus x_2$                                 & \multicolumn{3}{l}{\footnotesize $x_1 x_3$: не діл.\ жодним $\LM(f_i)$ $\Rightarrow$ Res}                                         \\[2pt]
+        \hline
+        \rule{0pt}{14pt}
+        $\oplus\;\; x_2$                                                & \multirow{2}{*}{$1$}                                                                      &                 &                     \\
+        $\;\;\;\;\underline{x_2 \oplus 1}$                              &                                                                                           &                 &                     \\[2pt]
+        \hline
+        \rule{0pt}{14pt}
+        $\oplus\;\; 1$                                                  & \multicolumn{3}{l}{\footnotesize $1$: не діл.\ жодним $\LM(f_i)$ $\Rightarrow$ Res}                                               \\[2pt]
+        \hline
+        $0$                                                             &                                                                                           &                 &                     \\[2pt]
+        \hline\hline
+        \rule{0pt}{14pt}
+        \textbf{Частки:}                                                & $q_1 = x_1 \oplus 1$                                                                      & $q_2 = 0$       & $q_3 = 0$           \\
+    \end{tabular}
+\end{center}
+
+Логіка:
+\begin{itemize}
+    \item Беремо перший $f_i$ такий, що ділитиме $f$, домножений на $x_{i}$;
+    \item Якщо жоден моном не ділить (як в ситуації з $x_1 x_3$), то додаємо (доксорюємо) до $\Res$ і викреслюємо з $f$;
+    \item В кінці лишається одиниця, її теж додаємо в залишок, бо її жоден з $f_{i}$ не ділить;
+    \item Зупиняємося на моменті коли $f = 0$.
+\end{itemize}
+
+Отже, частки: $q_1 = x_1 \oplus 1$, \; $q_2 = 0$, \; $q_3 = 0$. А лишок:
+\begin{equation*}
+    \Res(f;\, f_1, f_2, f_3) = x_1 x_3 \oplus 1.
+\end{equation*}
+
+\noindent \textbf{Перевірка:}
+\begin{equation*}
+    q_1 f_1 \oplus q_2 f_2 \oplus q_3 f_3 \oplus r
+    = (x_1 \oplus 1)(x_2 \oplus 1) \oplus (x_1 x_3 \oplus 1).
+\end{equation*}
+Якщо порозкривати дужки, то ми прийдемо до вихідного моному $f$:
+\begin{equation*}
+    (x_1 \oplus 1)(x_2 \oplus 1) = x_1 x_2 \oplus x_1 \oplus x_2 \oplus 1.
+\end{equation*}
+\begin{equation*}
+    x_1 x_2 \oplus x_1 \oplus x_2 \oplus 1 \oplus (x_1 x_3 \oplus 1)
+    = x_1 x_2 \oplus x_1 x_3 \oplus x_1 \oplus x_2 = f.
+\end{equation*}
