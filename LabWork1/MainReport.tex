@@ -7,6 +7,22 @@
 \newcommand{\LM}{\mathrm{LM}}
 \newcommand{\Res}{\mathrm{Res}}
 
+\usepackage{listings}
+\lstset{
+    language=Python,
+    basicstyle=\small\ttfamily,
+    keywordstyle=\bfseries,
+    commentstyle=\itshape\color{gray},
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny,
+    tabsize=4,
+    showstringspaces=false,
+}
+
+\addbibresource{references.bib}
+
 \begin{document}
 \input{cover.tex}
 
@@ -85,5 +101,10 @@
 \DeclareFieldFormat{url}{\href{#1}{\mkbibacro{(URL)}}}
 
 \input{SourceReport.tex}
+
+\newpage
+\selectlanguage{english}
+\printbibliography[heading=bibintoc, title={Список використаних джерел}]
+
 
 \end{document}
