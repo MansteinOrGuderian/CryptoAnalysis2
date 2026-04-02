@@ -1,0 +1,40 @@
+\chapter{}
+\label{chap:2}
+
+\section{Умова}
+Нехай $f \in B_{n}$, $AI (f) = d$ та $g$ -- афінна булева функція вiд $n$ змінних. Довести, що
+$d - 1 \leq AI (f \oplus g) \leq d + 1$.
+
+\section{Розв'язання}
+\begin{proof}
+    Скористаємося нерівністю, яку довели в першій задачі на практиці 4:
+    \begin{equation}
+        \label{eq:algebraic_immunity_inequality}
+        \AI(f \oplus g) \leq \AI(f) + \AI(g) \quad \forall\, f, g \in B_{n}.
+    \end{equation}
+    Спершу встановимо, чому дорівнює алгебраїчна імунність функції $g$:
+    \begin{itemize}
+        \item Якщо $g = const$ ($g = 0$ або $g = 1$), то $\AI(g) = 0$: справді, $1 \in \Ann(0)$ і $1 \in \Ann(1 \oplus 1) = \Ann(0)$, 
+            тому мінімальний степінь анулятора дорівнює~$0$.
+        \item Інакше $\deg g = 1$, і оскільки $g \neq 0$, маємо $g \in \langle g \rangle \setminus \{0\}$, 
+            тобто $\min \deg \langle g \rangle \leq 1$. Простими словами: оскільки $g$ -- афінна (а це підвид 
+            лінійної, степінь у неї максимум 1). Отже, $\AI(g) \leq 1$.
+    \end{itemize}
+    \textbf{Верхня оцінка} випливає нерівності~\eqref{eq:algebraic_immunity_inequality}:
+    \begin{equation*}
+        \AI(f \oplus g) \leq \AI(f) + \AI(g) \leq d + 1.
+    \end{equation*}
+    \textbf{Нижню оцінку} можна отримати, якщо покласти $f = (f \oplus g) \oplus g$. Застосувавши~\eqref{eq:algebraic_immunity_inequality} 
+    до такого запису $f$:
+    \begin{equation*}
+        \AI(f) \leq \AI(f \oplus g) + \AI(g)
+    \end{equation*}
+    Підставимо значення:
+    \begin{equation*}
+        d \leq \AI(f \oplus g) + 1 \Rightarrow \AI(f \oplus g) \geq d - 1
+    \end{equation*}
+    Об'єднуючи обидві оцінки маємо те, що і треба було показати:
+    \begin{equation*}
+        d - 1 \leq \AI(f \oplus g) \leq d + 1.
+    \end{equation*}
+\end{proof}
