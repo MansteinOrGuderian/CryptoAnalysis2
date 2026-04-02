@@ -4,6 +4,74 @@
 \section{Умова}
 
 Нехай $f, g \in B_{n}$, причому існує невироджена булева $n \times n$-матриця $A$ i вектор $b \in V_{n}$
-такі, що $g(x) = f(xA \oplus b), x \in V_{n}$. Довести, що $\min \deg \langle f \rangle = \min \deg \langle g \rangle$.
+такі, що $g(x) = f(xA \oplus b), \, x \in V_{n}$. Довести, що $\min \deg \langle f \rangle = \min \deg \langle g \rangle$.
 
 \section{Розв'язання}
+
+\begin{proof}
+    ~\par Позначимо $T(x) = xA \oplus b$. Оскільки матриця $A$ невироджена, $T : V_{n} \rightarrow V_{n}$ -- бієкція 
+    з оберненим відображенням $T^{-1}(y) = (y \oplus b)A^{-1}$. Для ідеалу $I \trianglelefteq B_n$ множина його нулів 
+    визначається як:
+    \begin{equation*}
+        V(I) = \{a \in V_n \mid h(a) = 0 \quad \forall\, h \in I\}
+    \end{equation*}
+    Можемо встановити відповідність між $V(\langle f \rangle)$ та $V(\langle g \rangle)$:
+    \begin{equation*}
+    g(x) = g(xA \oplus b) = f\big(T(x)\big) = 0 \Longleftrightarrow T(x) \in V(\langle f \rangle).
+    \end{equation*}
+    Тобто $x$ є нулем $g$ тоді й тільки тоді, коли $T(x)$ є нулем $f$. Іншими словами:
+    \begin{equation*}
+        V(\langle g \rangle) = T^{-1}\big(V(\langle f \rangle)\big)
+        = \big\{(a \oplus b)A^{-1} \mid a \in V(\langle f \rangle)\big\},
+    \end{equation*}
+    і, зокрема, $|V(\langle g \rangle)| = |V(\langle f \rangle)|$, оскільки $T$ є бієкцією. А тому, найбільше 
+    натуральне $d$, для якого $m(n,d) \leq |V(\langle f \rangle)|$ є однаковим для обох ідеалів, де 
+    $m(n,d) = \sum\limits_{i=0}^{d} \binom{n}{i}$ -- кількість мономів від $n$ змінних степеня $\leq d$ (кількість 
+    стовпців матриці $M_{I, d}$).
+
+    Можна визначити зв'язок між матрицями $M_{\langle f \rangle, d}$ та $M_{\langle g \rangle, d}$ на основі 
+    твердження~2.11, що каже про $M_{I,d}$ --- $|V(I)| \times m(n,d)$-матриця, рядки якої занумеровані точками 
+    $a \in V(I)$, стовпці --- мономами $x^{\alpha}$, $|\alpha| \leq d$, і на перетині стоїть $a^{\alpha}$.
+
+    В нашому випадку рядки матриці $M_{\langle g \rangle, d}$ занумеровані точками $c \in V(\langle g \rangle)$. 
+    Кожній такій точці відповідає $a = T(c) \in V(\langle f \rangle)$, причому $c = T^{-1}(a) = (a \oplus b)A^{-1}$.
+
+    Якщо розглянути елемент матриці $M_{\langle g \rangle, d}$ на перетині рядка $c$ та стовпця $x^{\alpha}$ пов'язаний 
+    з елементами $M_{\langle f \rangle, d}$:
+    \begin{equation*}
+        c^{\alpha} = \big((a \oplus b)A^{-1}\big)^{\alpha}.
+    \end{equation*}
+    Кожна координата вектора $c = (a \oplus b)A^{-1}$ є лінійною функцією від координат вектора $a$, тому моном 
+    $c^{\alpha}$ (степеня $|\alpha|$) є поліномом степеня $\leq |\alpha| \leq d$ від координат $a$, тобто лінійною 
+    комбінацією мономів $a^{\beta}$, де $|\beta| \leq d$.
+
+    Отже, існує квадратна матриця $P$ розміру $m(n,d) \times m(n,d)$ (що не залежить
+    від $a$) така, що
+    \begin{equation*}
+        M_{\langle g \rangle, d} = M_{\langle f \rangle, d} \cdot P.
+    \end{equation*}
+    Матриця $P$ має бути оборотною, оскільки прямій підстановці $x \mapsto (x \oplus b)A^{-1}$ відповідає обернена 
+    підстановка $x \mapsto xA \oplus b$, яка аналогічно породжує матрицю $Q$ таку, що 
+    $M_{\langle f \rangle, d} = M_{\langle g \rangle, d} \cdot Q$. Підставивши:
+    \begin{equation*}
+        M_{\langle g \rangle, d} = M_{\langle g \rangle, d} \cdot Q \cdot P,
+    \end{equation*}
+    звідси бачимо, що $Q \cdot P = I$ -- одинична матриця, тобто $P$ є оборотною. Отже для кожного $d$ має виконуватись:
+    \begin{equation*}
+        rank \big(M_{\langle g \rangle, d}\big) = rank \big(M_{\langle f \rangle, d} \cdot P\big)
+        = rank \big(M_{\langle f \rangle, d}\big)
+    \end{equation*}
+    За Твердженням~2.11:
+    \begin{equation*}
+        \min \deg\langle f \rangle \geq d + 1 \Longleftrightarrow rank \big(M_{\langle f \rangle, d}\big) = m(n, d),
+    \end{equation*}
+    і аналогічно для $\langle g \rangle$:
+        \begin{equation*}
+        \min \deg\langle g \rangle \geq d + 1 \Longleftrightarrow rank \big(M_{\langle g \rangle, d}\big) = m(n, d),
+    \end{equation*}
+    Оскільки ранги рівні для $\forall\, d \in \mathbb{N}$, ці еквівалентності мають виконуватися одночасно:
+    \begin{equation*}
+        \min \deg\langle f \rangle \geq d + 1 \Leftrightarrow \min \deg\langle g \rangle \geq d + 1 
+        \Rightarrow \min \deg\langle f \rangle = \min \deg\langle g \rangle.
+    \end{equation*}
+\end{proof}
