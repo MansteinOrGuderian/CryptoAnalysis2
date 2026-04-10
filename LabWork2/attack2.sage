@@ -335,7 +335,7 @@ print(f"Total sequences: {n * (2**m - 1)}")
 # ============================================================
 # Strategy:
 #   - Try analogs with k=1 first (cheapest: 1023 candidates each)
-#   - Then k=2 if needed (1023^2 ≈ 1M candidates)
+#   - Then k=2 if needed (1023^2 \approx 1M candidates)
 #   - Brute-force any remaining registers
 #
 # For each analog g depending on registers i1, ..., ik:
