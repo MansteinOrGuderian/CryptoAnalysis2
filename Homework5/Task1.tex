@@ -1,0 +1,55 @@
+\chapter{}
+\label{chap:1}
+
+\section{Умова}
+
+Довести, що булева функція вiд $n$ змінних є $s$-вимірною тоді й тільки тоді, коли вона має не менше нiж $n - s$
+лінійно незалежних несуттєвих векторів, $s \in \overline{0, n - 1}$.
+
+\section{Розв'язання}
+
+\begin{proof}
+    ~\par Цей факт є узагальненням першої задачі, про зв'язок алгебраїчної виродженості з несуттєвим вектором яку
+    розглядали на практиці. Він описує структуру булевої функції через розмірність її лінійного простору нечутливості.
+
+    Необхідність ($\Rightarrow$) Нехай функція $f$ є $s$-вимірною: $f(x) = \varphi(xM)$, де $M$ -- булева матриця,
+    розмірності $(n \times s)$, $\rk(M) \leq s$.
+
+    Нехай $a \in \ker M$, тобто $aM = 0$, то
+    \begin{equation*}
+        f(x \oplus a) = \varphi\big((x \oplus a)M\big) = \varphi(xM \oplus aM) = \varphi(xM) = f(x)
+    \end{equation*}
+    для всіх $x \in V_n$, тобто $a$ --- несуттєвий. Отже, $\ker M \subseteq W_{f}$, де через $W_{f}$ позначено
+    множину несуттєвих векторів.
+
+    \noindent Кількість лінійно незалежних розв'язків такої системи $xM = 0$ дорівнює:
+    \begin{equation*}
+        \dim(\ker M) = n - \rk(M) \geq n - s.
+    \end{equation*}
+    Отже $\dim W_f \geq n - s$, тобто $f$ має не менше ніж $n - s$ лінійно незалежних несуттєвих векторів.
+
+    Достатність ($\Longleftarrow$) Нехай $\dim W_f \geq n - s$. Оберемо базис $\left\{a_1, \ldots, a_r\right\}$
+    підпростору $W_f$, де $r = \dim W_f \geq n - s$, і доповнимо його до базису простору $V_n$ деякими $b_1, \ldots, b_{n-r}$.
+
+    Кожен вектор з $x \in V_n$ єдиним чином розкладається:
+    \begin{equation*}
+        x = \underbrace{\alpha_1 a_1 \oplus \ldots \oplus \alpha_r a_r}_{\in\, W_f}
+        \;\oplus\; \beta_1 b_1 \oplus \ldots \oplus \beta_{n-r} b_{n-r} \quad \alpha_i, \beta_j \in \{0,1\}.
+    \end{equation*}
+    Оскільки для довільного $x \in V_n$ компоненти з $W_f$ не впливають на значення $f$ (бо несуттєві вектори не змінюють
+    $f$ -- див. задачу \No 1 з практики 5), то значення $f(x)$ визначається лише коефіцієнтами при $b_1, \ldots, b_{n-r}$.
+    \begin{equation*}
+        f(x) = f(\beta_1 b_1 \oplus \ldots \oplus \beta_{n-r} b_{n-r}),
+    \end{equation*}
+    Нехай $(n \times n)$-матрицю переходу $C$, рядками якої є координати базисних векторів 
+    $a_1, \ldots, a_r, b_1, \ldots, b_{n-r}$ у стандартному базисі. Тоді $xC^{-1}$ дає координати $x'$ у новому 
+    базисі: $x' = xC^{-1} = (\alpha_1, \ldots, \alpha_r, \beta_1, \ldots, \beta_{n-r})$.
+
+    Нехай $M$ це прямокутна матриця $(n \times (n-r))$, що складається з останніх $n - r$ стовпців матриці $C^{-1}$. 
+    Тоді $xM = (\beta_1, \ldots, \beta_{n-r})$ і
+    \begin{equation*}
+        f(x) = \varphi(\beta_1, \ldots, \beta_{n-r}) = \varphi(xM),
+    \end{equation*}
+    де $\varphi(\beta_1, \ldots, \beta_{n-r}) = f(\beta_1 b_1 \oplus \ldots \oplus \beta_{n-r} b_{n-r})$. Отже, 
+    функція $f$ є $(n-r)$-вимірною. Оскільки $n - r \leq s$, то функція $f$ є $s$-вимірною.
+\end{proof}
