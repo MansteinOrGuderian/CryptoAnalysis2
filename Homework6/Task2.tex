@@ -8,3 +8,88 @@
 \end{equation*}
 
 \section{Розв'язання}
+За означенням перетворення Уолша-Адамара для довільного $\alpha \in V_n$ маємо:
+\begin{equation*}
+    \hat{f}(\alpha) = \sum_{x \in V_n} (-1)^{f(x) \oplus \alpha x}
+    = \sum_{x \in V_n} (-1)^{\underbrace{x_1 x_2 \oplus \alpha_1 x_1 \oplus \alpha_2 x_2}_{\text{залежить } x_{1}, \, x_{2}}
+        \oplus \underbrace{(1 \oplus \alpha_3) x_3}_{\text{від } x_{3}} \oplus \ldots 
+        \oplus \underbrace{(1 \oplus \alpha_n) x_n}_{\text{від } x_{n}}}.
+\end{equation*}
+Показник степеня розпадається на суму функцій, можна факторизувати суму на два добутки (за правилом 
+$(-1)^{a \oplus b} = (-1)^{a} \cdot (-1)^{b}$):
+\begin{equation}
+    \label{eq:twoproducts}
+    \hat{f}(\alpha) = S(\alpha_1, \alpha_2) \cdot \prod_{i=3}^{n} T_i(\alpha_i),
+\end{equation}
+де через $S(\alpha_1, \alpha_2)$ і $T_i(\alpha_i)$ позначимо відповідні суми:
+\begin{equation*}
+    S(\alpha_1, \alpha_2) = \sum_{x_1, x_2 \in \{0,1\}} (-1)^{x_1 x_2 \oplus \alpha_1 x_1 \oplus \alpha_2 x_2},
+    \qquad
+    T_i(\alpha_i) = \sum_{x_i \in \{0,1\}} (-1)^{(1 \oplus \alpha_i) x_i}.
+\end{equation*}
+Друга сума -- це лише два додатки:
+\begin{equation*}
+    T_i(\alpha_i) = (-1)^{(1 \oplus \alpha_{i}) \cdot 0} + (-1)^{(1 \oplus \alpha_{i}) \cdot 1} =
+    1 + (-1)^{1 \oplus \alpha_{i}} =
+    \begin{cases}
+        1 + (-1)^0 = 2, & \text{якщо } \alpha_i = 1, \\
+        1 + (-1)^1 = 0, & \text{якщо } \alpha_i = 0.
+    \end{cases}
+\end{equation*}
+А далі, оскільки у нас визначено $\hat{f}(\alpha)$ рівністю~\eqref{eq:twoproducts}, то цей добуток буде 
+нулем, якщо хоча б один $T_{i}(\alpha_{i})$, іншими словами хоча б одне $\alpha_3, \ldots, \alpha_n$ дорівнює 
+$0$. Тому не нуль буде тоді, коли всі $T_{i} \neq 0$, тобто $\alpha_3 = \ldots = \alpha_n = 1$. 
+У цьому випадку $\prod\limits_{i=3}^{n} T_i = 2^{n-2}$. 
+
+А далі обраховуємо і $S(\alpha_1, \alpha_2)$. В цьому множнику показник дорівнює $x_1 x_2 \oplus \alpha_1 x_1 \oplus \alpha_2 x_2$, 
+тому сформуємо табличку, де по рядках -- можливі значення $(x_{1}, x_{2})$, а стовпці -- можливі значення 
+$(\alpha_1,\alpha_2)$. В кожній клітинці значення $(-1)^{x_1 x_2 \oplus \alpha_1 x_1 \oplus \alpha_2 x_2}$ 
+при конкретних $x_{1}, x_{2}, \alpha_{1}, \alpha_{2}$. Останній рядок -- шукана сума по стовпцях.
+
+\begin{center}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{c|cccc}
+        $(\alpha_1,\alpha_2)$  & $(0,0)$     & $(0,1)$     & $(1,0)$ & $(1,1)$ \\
+        \hline
+        $(x_1,x_2)=(0,0)$      & $(-1)^0=1$  & $1$         & $1$     & $1$     \\
+        $(x_1,x_2)=(0,1)$      & $(-1)^0=1$  & $(-1)^1=-1$ & $1$     & $-1$    \\
+        $(x_1,x_2)=(1,0)$      & $1$         & $1$         & $-1$    & $-1$    \\
+        $(x_1,x_2)=(1,1)$      & $(-1)^1=-1$ & $1$         & $1$     & $-1$    \\
+        \hline
+        $S(\alpha_1,\alpha_2)$ & $2$         & $2$         & $2$     & $-2$
+    \end{tabular}
+\end{center}
+Отже коефіцієнти Уолша--Адамара, за формулою~\eqref{eq:twoproducts}:
+\begin{center}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{c|c}
+        $\alpha$               & $\hat{f}(\alpha)$ \\
+        \hline
+        $(0, 0, 1, \ldots, 1)$ & $2 \cdot 2^{n-2}    = 2^{n-1}$         \\
+        $(0, 1, 1, \ldots, 1)$ & $2 \cdot 2^{n-2}    = 2^{n-1}$         \\
+        $(1, 0, 1, \ldots, 1)$ & $2 \cdot 2^{n-2}    = 2^{n-1}$         \\
+        $(1, 1, 1, \ldots, 1)$ & $(-2) \cdot 2^{n-2}  = -2^{n-1}$        \\
+    \end{tabular}
+\end{center}
+А усі інші $\hat{f}(\alpha) = 0$. Всі чотири ненульові коефіцієнти за модулем дорівнюють $|\hat{f}(\alpha)| = 2^{n-1}$, 
+а нам треба максимум з цих значень. Тому всі чотири є найбільш ймовірними аналогами.
+
+За аналогічним правилом, як і в першій задачі (Означення~3.2), обчислюємо статистичні аналоги і їх якість формулою~\eqref{eq:probability}:
+\begin{center}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{c|c|c|c}
+        $\alpha$           & $\hat{f}(\alpha)$ & Статистичний аналог                                                 & $\Pr(f = l_{\alpha,c})$ \\
+        \hline
+        $(0,0,1,\ldots,1)$ & $> 0$             & $g_1 = x_3 \oplus x_4 \oplus \ldots \oplus x_n$                     & $\frac{3}{4}$           \\
+        $(0,1,1,\ldots,1)$ & $> 0$             & $g_2 = x_2 \oplus x_3 \oplus \ldots \oplus x_n$                     & $\frac{3}{4}$           \\
+        $(1,0,1,\ldots,1)$ & $> 0$             & $g_3 = x_1 \oplus x_3 \oplus \ldots \oplus x_n$                     & $\frac{3}{4}$           \\
+        $(1,1,1,\ldots,1)$ & $< 0$             & $g_4 = x_1 \oplus x_2 \oplus x_3 \oplus \ldots \oplus x_n \oplus 1$ & $\frac{3}{4}$           \\
+    \end{tabular}
+\end{center}
+\begin{equation*}
+    \Pr(f = l_{\alpha,c}) = \frac{1}{2}\left(1 + 2^{-n} \cdot 2^{n-1}\right) = \frac{1}{2}\cdot\frac{3}{2} = \frac{3}{4}.
+\end{equation*}
+І на останок, нелінійність, за формулою~\eqref{eq:nonlinearity}, складатиме:
+\begin{equation*}
+    N_f = 2^{n-1}\big(1 - 2^{-n} \cdot 2^{n-1}\big) = 2^{n-1}\cdot\frac{1}{2} = 2^{n-2}.
+\end{equation*}
