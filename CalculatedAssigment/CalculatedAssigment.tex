@@ -4,9 +4,6 @@
 % \author{}
 % \date{} % empty {} == no date
 
-\renewcommand{\Pr}{\operatorname{Pr}}
-\newcommand{\E}{\mathbb{E}}
-
 \begin{document}
 \input{cover.tex}
 
@@ -56,9 +53,6 @@
 
 \renewcommand{\chaptername}{Завдання \No}
 \renewcommand*{\proofname}{Доведення:}
-\newcommand{\Mod}[1]{\ (\mathrm{mod}\ #1)}
-\newcommand{\AI}{\operatorname{AI}}
-\newcommand{\Ann}{\operatorname{Ann}}
 
 \NewDocumentCommand{\MakeWaveComment}{m}{
 \ifmmode % if math mode, make indent before bigger
@@ -88,9 +82,9 @@
 
 \input{MainTask.tex}
 
-\appendix
+% \appendix
 \input{Annex.tex}
-\appendixpage
-\addappheadtotoc
+% \appendixpage
+% \addappheadtotoc
 
 \end{document}
