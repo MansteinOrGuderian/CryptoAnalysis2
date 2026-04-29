@@ -1,7 +1,391 @@
-\chapter{}
+\chapter{Вимірність булевих функцій}
 \label{chap:1}
 
-\section{Умова}
+\section{Вступ}
+Метою роботи є засвоєння та поглиблення теоретичного матеріалу, пов’язаного з таким важливим криптографічним
+параметром як вимірність булевої функції.
+
+\noindent Згідно з плану розрахункової, необхідно зробити наступні 8 пунктів:
+\begin{enumerate}
+    \item Побудувати простір $L_{f}$. Знайти базис цього простору.
+    \item Побудувати простір $L_{f}^{\perp}$. Знайти базис і цього простору.
+    \item Побудувати простір $\operatorname{span}(\operatorname{Spec}(f))$. Порівняти множини $L_{f}^{\perp}$ та
+          $\operatorname{span}(\operatorname{Spec}(f))$.
+    \item Побудувати фактор-простір $V_{n}/L_{f}$. Обрати в кожному класі суміжності представника та сформувати
+          з них множину $S$.
+    \item Сформувати з векторів базису $L_{f}^{\perp}$ матрицю $M$. За допомогою множини $S$ та матриці $M$
+          побудувати функцію $\varphi(\beta), \beta \in S$.
+    \item За допомогою функції $\varphi$ побудувати функцію $g : V_{s} \rightarrow \left\{0, 1\right\}$ (навести
+          $g$ у вигляді полінома Жегалкіна). Переконатись, що виконується рівність $f(x) = g(xM), x \in V_{n}$.
+    \item Розв’язати систему рівнянь $xM = 0$ відносно $x$. Порівняти множину розв'язків цiєї системи з $L_{f}$.
+    \item Побудувати матрицю $M'$, обрати деякий iнший базис простору $L_{f}^{\perp}$ (якщо вiн існує), та виконати
+          для матриці $M'$ пункти 5-6, а також перевірити чи збігається отримана в результаті цього функція $g'$ з
+          функцією $g$.
+\end{enumerate}
+
+\section{Вхідні дані}
+\label{sec:inputdata}
+Наша булева функція $f \, : \, V_{4} \rightarrow \left\{0, 1\right\}$ має вигляд:
+\begin{equation*}
+    f \left(x_{1}, x_{2}, x_{3}, x_{4}\right) = x_{1}x_{2} \oplus x_{1}x_{3} \oplus x_{2}x_{3} \oplus x_{1}x_{4} \oplus x_{3}x_{4} \oplus x_{2} \oplus x_{4}
+\end{equation*}
+У нас залежність від 4 змінних, тому $n=4$. Одразу ще випишу вектор значень функції $f$:
+\begin{center}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{c|cccccccc}
+        $x_{1}, x_{2}, x_{3}, x_{4}$ & 0000 & 0001 & 0010 & 0011 & 0100 & 0101 & 0110 & 0111 \\
+        \hline
+        $f(x)$                       & 0    & 1    & 0    & 0    & 1    & 0    & 0    & 0    \\
+        \noalign{\smallskip} \hline \noalign{\smallskip}
+        $x_{1}, x_{2}, x_{3}, x_{4}$ & 1000 & 1001 & 1010 & 1011 & 1100 & 1101 & 1110 & 1111 \\
+        \hline
+        $f(x)$                       & 0    & 0    & 1    & 0    & 0    & 0    & 0    & 1    \\
+    \end{tabular}
+\end{center}
+Можна бачити, що сума квадратів значень $f$ дорівнює 4, тобто $\operatorname{wt}(f) = 4$.
 
 \section{Розв'язання}
 
+\subsection{Побудова простору \texorpdfstring{$L_{f}$}{Lf}}
+
+За алгоритмом, описаному в теоретичних відомостях до РР, (і оглянувши обґрунтування, в якості задачі~3.24 
+(див. додаток~\ref{append:1})) маємо:
+\begin{enumerate}[leftmargin=2em]
+    \item Спершу неохідно обчислити $\hat{f}(\alpha)$, де $\alpha \in V_{4}$;
+    \item Побудувати $h(x) = 1 \Leftrightarrow \hat{f}(x) \neq 0$;
+    \item Обчислити коефіцієнти Фур'є цієї функції $C_h(\alpha)$, $\alpha \in V_{4}$;
+    \item Покласти $L_{f} = \{\alpha \in V_{4} : C_h(\alpha) = C_h(0)\}$.
+\end{enumerate}
+
+Для обчислення $\hat{f}(\alpha)$, треба обчислити коефіцієнти Фур'є $C_{f}$ методом швидкого перетворення Адамара, 
+а далі скористаємося формулою зв'язку:
+\begin{equation}
+    \label{eq:AdamarCoef}
+    \hat{f}(\alpha) = \begin{cases}
+        2^n - 2\,C_{f}(0), & \alpha = 0,    \\
+        -2\,C_{f}(\alpha), & \alpha \neq 0.
+    \end{cases}
+\end{equation}
+Отже, коефіцієнти Фур'є $C_{f}$ дорівнюють:
+
+\newpage
+\begin{table}[htpb]
+    \centering
+    \begin{tblr}{
+        colspec = {c | c | c | c | c},
+        row{1} = {font=\bfseries},
+        hline{2,18} = {solid},
+        hline{10} = {1}{solid},
+        hline{6,10,14} = {2}{solid},
+        hline{4,6,8,10,12,14,16} = {3}{solid},
+        hline{3,4,5,6,7,8,9,10,11,12,13,14,15,16,17} = {4}{solid}
+            }
+        $f$ & Крок 1 & Крок 2 & Крок 3 & $C_{f}$ \\
+        0   & 0      & 1      & 2      & 4     \\
+        1   & 1      & 1      & 2      & 0     \\
+        0   & 1      & 1      & 0      & 0     \\
+        0   & 0      & 1      & 0      & 0     \\
+        1   & 1      & $-1$   & 0      & 0     \\
+        0   & 0      & 1      & 0      & 0     \\
+        0   & 0      & 1      & $-2$   & 0     \\
+        0   & 1      & $-1$   & 2      & $-4$  \\
+        0   & 0      & 1      & 0      & 0     \\
+        0   & 1      & 1      & 0      & 0     \\
+        1   & $-1$   & $-1$   & 2      & 4     \\
+        0   & 0      & $-1$   & 2      & 0     \\
+        0   & 1      & $-1$   & $-2$   & 0     \\
+        0   & 0      & 1      & 2      & $-4$  \\
+        0   & 0      & $-1$   & 0      & 0     \\
+        1   & $-1$   & 1      & 0      & 0     \\
+    \end{tblr}
+    \caption{Швидке перетворення Адамара для $f$}
+\end{table}
+Далі, традиційно, зробимо перевірку рівності Парсеваля:
+\begin{equation*}
+    \frac{1}{2^n}\sum\limits_{\alpha \in V_n} C_f(\alpha)^2 = \frac{4 \cdot 16}{16} = 4 = \operatorname{wt}(f).
+\end{equation*}
+Знаючи $C_f(\alpha)$, можна обчислити коефіцієнти Уолша-Адамара~\eqref{eq:AdamarCoef}:
+\begin{center}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{c|cccccccc}
+        $\alpha$          & 0000 & 0001 & 0010 & 0011 & 0100 & 0101 & 0110 & 0111 \\
+        \hline
+        $\hat{f}(\alpha)$ & 8    & 0    & 0    & 0    & 0    & 0    & 0    & 8    \\
+        \noalign{\smallskip} \hline \noalign{\smallskip}
+        $\alpha$          & 1000 & 1001 & 1010 & 1011 & 1100 & 1101 & 1110 & 1111 \\
+        \hline
+        $\hat{f}(\alpha)$ & 0    & 0    & $-8$ & 0    & 0    & 8    & 0    & 0    \\
+    \end{tabular}
+\end{center}
+Перевірка Парсевалем:
+\begin{equation*}
+    \sum \hat{f}(\alpha)^2 = 4 \cdot 64 = 256 = 2^{2 \cdot n}.
+\end{equation*}
+Визначимо функцію $h \, : \, h(x) = 1 \Leftrightarrow \hat{f}(x) \neq 0$ та обрахуємо коефіцієнти Фур'є $C_h$:
+\begin{center}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{c|cccccccc}
+        $x$    & 0000 & 0001 & 0010 & 0011 & 0100 & 0101 & 0110 & 0111 \\
+        \hline
+        $h(x)$ & 1    & 0    & 0    & 0    & 0    & 0    & 0    & 1    \\
+        \noalign{\smallskip} \hline \noalign{\smallskip}
+        $x$    & 1000 & 1001 & 1010 & 1011 & 1100 & 1101 & 1110 & 1111 \\
+        \hline
+        $h(x)$ & 0    & 0    & 1    & 0    & 0    & 1    & 0    & 0    \\
+    \end{tabular}
+\end{center}
+Бачимо, що $\operatorname{wt}(h) = 4$. Обчислюємо $C_h(\alpha)$ методом швидкого перетворення Адамара:
+\newpage
+\begin{table}[htpb]
+    \centering
+    \begin{tblr}{
+        colspec = {c | c | c | c | c},
+        row{1} = {font=\bfseries},
+        hline{2,18} = {solid},
+        hline{10} = {1}{solid},
+        hline{6,10,14} = {2}{solid},
+        hline{4,6,8,10,12,14,16} = {3}{solid},
+        hline{3,4,5,6,7,8,9,10,11,12,13,14,15,16,17} = {4}{solid}
+            }
+        $h$ & Крок 1 & Крок 2 & Крок 3 & $C_h$ \\
+        1   & 1      & 1      & 2      & 4     \\
+        0   & 0      & 1      & 2      & 0     \\
+        0   & 1      & 1      & 0      & 0     \\
+        0   & 0      & 1      & 0      & 0     \\
+        0   & 0      & 1      & 2      & 0     \\
+        0   & 1      & $-1$   & $-2$   & 4     \\
+        0   & 0      & 1      & 0      & 0     \\
+        1   & 1      & $-1$   & 0      & 0     \\
+        0   & 1      & 1      & 0      & 0     \\
+        0   & 0      & $-1$   & 0      & 0     \\
+        1   & $-1$   & $-1$   & 2      & 0     \\
+        0   & 0      & 1      & $-2$   & 4     \\
+        0   & 0      & 1      & 0      & 0     \\
+        1   & $-1$   & 1      & 0      & 0     \\
+        0   & 0      & $-1$   & 2      & 4     \\
+        0   & 1      & $-1$   & 2      & 0     \\
+    \end{tblr}
+    \caption{Швидке перетворення Адамара для $h$}
+\end{table}
+Перевірка теж Парсевалем:
+\begin{equation*}
+    \frac{1}{16}\sum C_h(\alpha)^2 = \frac{4 \cdot 16}{16} = 4 = \operatorname{wt}(h).
+\end{equation*}
+І будуємо власне простір $L_{f}$ і його базис.
+\begin{equation*}
+    L_{f} = \left\{\alpha \in V_{4} : C_h(\alpha) = C_h(0) = 4\right\} = \left\{(0000),\; (0101),\; (1011),\; (1110)\right\}.
+\end{equation*}
+\begin{equation*}
+    |L_{f}| = 2^{k} \Leftrightarrow \dim L_{f} = k \qquad |L_{f}| = 4 = 2^2, \text{ отже } \dim L_{f} = 2
+\end{equation*}
+\textbf{Базис $L_{f}$.} Вектори $(0101)$ та $(1011)$ лінійно незалежні над $\mathbb{F}_{2}$. Сума 
+$(0101) \oplus (1011) = (1110)$. Разом із $(0000)$ вони породжують усю множину $L_{f}$, тому 
+$\{(0101),\; (1011)\}$ є базисом $L_{f}$.
+
+\subsection{Побудова простору \texorpdfstring{$L_{f}^{\perp}$}{L}}
+За означенням $L_{f}^{\perp} = \{y \in V_{4} \mid \langle x, y \rangle = 0 \; \forall \, x \in L_{f}\}$. Підставляємо 
+наші базисні вектори (інші є їх лінійними комбінаціями) і рахуємо скалярні добутки:
+\begin{equation*}
+    \begin{cases}
+        (0101) \cdot y \left(y_{1}, y_{2}, y_{3}, y_{4}\right) = y_{2} \oplus y_{4} = 0, \\
+        (1011) \cdot y \left(y_{1}, y_{2}, y_{3}, y_{4}\right) = y_{1} \oplus y_{3} \oplus y_{4} = 0.
+    \end{cases}
+\end{equation*}
+Маємо систему з двох рівнянь на чотири змінні. Обираємо $2$ вільні змінні: $y_{2}, y_{3}$, тоді виразимо залежні: 
+$y_{4} = y_{2}$, $y_{1} = y_{3} \oplus y_{4} = y_{3} \oplus y_{2}$. Тоді таблиця значень матиме наступний вигляд:
+\begin{center}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{cc|ccc}
+        $y_{2}$ & $y_{3}$ & $y_{1}$ & $y_{4}$ & $y \left(y_{1}, y_{2}, y_{3}, y_{4}\right)$ \\
+        \hline
+        0       & 0       & 0       & 0       & (0000)                                      \\
+        0       & 1       & 1       & 0       & (1010)                                      \\
+        1       & 0       & 1       & 1       & (1101)                                      \\
+        1       & 1       & 0       & 1       & (0111)                                      \\
+    \end{tabular}
+\end{center}
+Отже вектори, що складають $L_{f}^{\perp}$ є наступними:
+\begin{equation*}
+    L_{f}^{\perp} = \{(0000),\; (0111),\; (1010),\; (1101)\}.
+\end{equation*}
+Розмірність і базис цього ортогонального простору є наступними:
+\begin{equation*}
+    \dim L_{f}^{\perp} = 4 - \dim L_{f} = 4 - 2 = 2.
+\end{equation*}
+\textbf{Базис $L_{f}^{\perp}$.} Вектори $\{(0111),\; (1010)\}$ -- лінійно незалежні, а вектор $(1101)$ є XOR-ом 
+базисних векторів.
+
+\subsection{Побудова \texorpdfstring{$\operatorname{span}(\operatorname{Spec}(f))$}{span}}
+Набір векторів, який відповідає ненульовим коефіцієнтам Уолша-Адамара є наступним:
+\begin{equation*}
+    \operatorname{Spec}(f) = \{\alpha \in V_{4} : \hat{f}(\alpha) \neq 0\}
+    = \{(0000),\; (0111),\; (1010),\; (1101)\}.
+\end{equation*}
+Обчислимо її лінійну оболонку, як множина всіх можливих XOR-комбінацій елементів $\operatorname{Spec}(f)$:
+\begin{equation*}
+    \operatorname{span}(\operatorname{Spec}(f)) = 
+    \left\{\bigoplus\limits_{i \in \left\{1, \dots k\right\}} s_{i} \, \bigg| \, s_{i} \in \operatorname{Spec}(f)\right\}
+\end{equation*}
+Отже:
+\begin{equation*}
+    \operatorname{span}(\operatorname{Spec}(f)) = \{(0000),\; (0111),\; (1010),\; (1101)\},
+    \qquad \dim \operatorname{span}(\operatorname{Spec}(f)) = 2.
+\end{equation*}
+Сам $\operatorname{Spec}(f)$ міг би бути більшим за $L_{f}^{\perp}$. У нашому випадку просто пощастило, що 
+$\operatorname{Spec}(f)$ виявився замкнутим відносно операції $\oplus$, тобто сам є підпростором, а тому ми 
+отримали, що:
+\begin{equation*}
+    L_{f}^{\perp} = \operatorname{Spec}(f) = \operatorname{span}(\operatorname{Spec}(f))
+\end{equation*}
+Це узгоджується із задачею~3.21 (див. додаток~\ref{append:1}).
+
+\subsection{Фактор-простір \texorpdfstring{$V_{4} / L_{f}$}{V4}}
+Весь простір розбивається на $|V_{4} / L_{f}| = 2^4 / 2^2 = 4$ класи суміжності, тобто по $4$ вектори в кожному. 
+Класи суміжності формуємо наступними чином (через $\beta$ позначимо представника класу):
+\begin{equation*}
+    \beta \oplus L_{f} = \left\{\beta \oplus a \, \vert \, a \in L_{f}\right\}
+\end{equation*}
+Вони однозначно визначаються підпростором $L_f$. Кожен вектор $x \in V_4$ належить рівно одному класу. Якщо 
+$x$ і $y$ належать одному класу, то $x \oplus y \in L_f$; якщо у різних — то $x \oplus y \notin L_f$. Зауважимо, 
+також що функція $f$ приймає константне значення на кожному класі (це наслідок з означення $L_{f}$: якщо 
+$a \in L_{f}$, то $f(x \oplus a) = f(x), \, \forall \, x \in V_{4}$).
+\begin{center}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{c|c}
+        \textbf{Клас суміжності} $\beta \oplus L_{f}$ & $f$ \\
+        \hline
+        $\{0000,\; 0101,\; 1011,\; 1110\}$            & $0$ \\
+        $\{0001,\; 0100,\; 1010,\; 1111\}$            & $1$ \\
+        $\{0010,\; 0111,\; 1001,\; 1100\}$            & $0$ \\
+        $\{0011,\; 0110,\; 1000,\; 1101\}$            & $0$ \\
+    \end{tabular}
+\end{center}
+Оберемо наступну множину представників $S$:
+\begin{equation*}
+    S = \{(0000),\; (0001),\; (0010),\; (0011)\}.
+\end{equation*}
+
+\subsection{Матриця \texorpdfstring{$M$}{M} та функція \texorpdfstring{$\varphi$}{phi}}
+Базис $L_{f}^{\perp}$ складається з двох векторів: $(0111)$ і $(1010)$. Стовпцями матриці $M$ є вектори базису, 
+тобто матриця має вигляд:
+\begin{equation}
+    \label{eq:Mmatrix}
+    M = \begin{pmatrix}
+        0 & 1 \\
+        1 & 0 \\
+        1 & 1 \\
+        1 & 0
+    \end{pmatrix}
+\end{equation}
+Функція $\varphi(\beta)$ визначається наступним чином через матрицю $M$: $\varphi(\beta) = \beta M$, де $\beta \in S$. 
+Обчислимо всі добутки векторів з множини $S$ на матрицю $M$:
+\begin{align*}
+    \varphi(0000) & = \beta_{1} \cdot M = (0 \oplus 0 \oplus 0 \oplus 0,\;\; 0 \oplus 0 \oplus 0 \oplus 0) = (0, 0), \\
+    \varphi(0001) & = \beta_{2} \cdot M = (0 \oplus 0 \oplus 0 \oplus 1,\;\; 1 \oplus 0 \oplus 0 \oplus 0) = (1, 0), \\[2pt]
+    \varphi(0010) & = \beta_{3} \cdot M = (0 \oplus 0 \oplus 1 \oplus 0,\;\; 0 \oplus 0 \oplus 1 \oplus 0) = (1, 1), \\[2pt]
+    \varphi(0011) & = \beta_{4} \cdot M = (0 \oplus 0 \oplus 1 \oplus 1,\;\; 0 \oplus 0 \oplus 1 \oplus 0) = (0, 1).
+\end{align*}
+На виході ми отримали чотири попарно різні значення, тобто функція $\varphi\colon S \to V_{2}$ є бієкцією.
+
+\subsection{Функція \texorpdfstring{$g$}{g} та перевірка \texorpdfstring{$f(x) = g(xM)$}{fx}}
+Функція $g$, в нашому випадку, задається відображенням $V_{2} \rightarrow \left\{0, 1\right\}$, 
+$g(y) = f(\varphi^{-1}(y))$, $y \in V_{2}$. Отже, функція матиме такі чисельні значення:
+\begin{align*}
+    g(0,0) & = f(\varphi^{-1}(0,0)) = f(0000) = 0, \\
+    g(0,1) & = f(\varphi^{-1}(0,1)) = f(0011) = 0, \\
+    g(1,0) & = f(\varphi^{-1}(1,0)) = f(0001) = 1, \\
+    g(1,1) & = f(\varphi^{-1}(1,1)) = f(0010) = 0.
+\end{align*}
+Як відомо, будь-яку булеву функцію $g : V_{s} \rightarrow \left\{0, 1\right\}$ можна однозначно записати у вигляді 
+АНФ (a.k.a поліном Жегалкіна):
+\begin{equation*}
+    g(y_1, \ldots, y_s) = \bigoplus_{S \subseteq \{1,\ldots,s\}} a_S \cdot \prod_{i \in S} y_i,
+\end{equation*}
+де $a_S \in \{0,1\}$ --- коефіцієнти, а кожна підмножина $S$ задає один моном (кількість змінних у мономі -- може 
+бути в межах $\overline{0, s}$). Самі коефіцієнти $a_{S}$ знаходяться за формулою перетворення Мьобіуса. Та я піду 
+простішим шляхом -- підставлятиму значення $(y_{1}, y_{2})$ і шукатиму коефіцієнти. Сама функція $g$ має бути 
+представлена у вигляді:
+\begin{equation*}
+    g(y_1, y_2) = a_0 \oplus a_1\, y_1 \oplus a_2\, y_2 \oplus a_{12}\, y_1 y_2.
+\end{equation*}
+Поки $a_0, a_1, a_2, a_{12} \in \{0,1\}$ -- невідомі.
+\begin{itemize}
+    \item При $(y_1, y_2) = (0,0)$ усі мономи, що містять $y_1$ або $y_2$, обнуляються:
+        \begin{equation*}
+            g(0,0) = a_0 \qquad\Longrightarrow\qquad a_0 = 0.
+        \end{equation*}
+    \item При $(y_1, y_2) = (1,0)$ мономи з $y_2$ обнуляються:
+        \begin{equation*}
+            g(1,0) = a_0 \oplus a_1 \qquad\Longrightarrow\qquad a_1 = a_0 \oplus g(1,0) = 0 \oplus 1 = 1.
+        \end{equation*}
+    \item При $(y_1, y_2) = (0,1)$ мономи з $y_1$ обнуляються:
+        \begin{equation*}
+            g(0,1) = a_0 \oplus a_2 \qquad\Longrightarrow\qquad a_2 = a_0 \oplus g(0,1) = 0 \oplus 0 = 0.
+        \end{equation*}
+    \item При $(y_1, y_2) = (1,1)$ жоден моном не обнуляється:
+        \begin{equation*}
+            g(1,1) = a_0 \oplus a_1 \oplus a_2 \oplus a_{12} \qquad\Longrightarrow\qquad
+            a_{12} = a_0 \oplus a_1 \oplus a_2 \oplus g(1,1) = 0 \oplus 1 \oplus 0 \oplus 0 = 1.
+        \end{equation*}
+\end{itemize}
+Отже, функція $g$ у вигляді поліному Жегалкіна представляється так:
+\begin{equation}
+    \label{eq:gfunc}
+    g(y_1, y_2) = a_1\, y_1 \oplus a_{12}\, y_1 y_2.
+\end{equation}
+Зробимо перевірку $f(x) = g(xM)$ для всіх $x \in V_{4}$. Значення функції $f$ ми рахували напочатку в розділі~\ref{sec:inputdata}. 
+А матричне множення всіх векторів $x \in V_{4}$ на матрицю $M$, визначену~\eqref{eq:Mmatrix}, а потім підставновку отриманого 
+значення-вектора розмірності $1\times 2$ у функцію $g$, визначену~\eqref{eq:gfunc}, думаю можна опустити і навести 
+лише результати:
+\begin{center}
+    \renewcommand{\arraystretch}{1.1}
+    \begin{tabular}{c|c|c|c||c|c|c|c}
+        $x$  & $xM$  & $g(xM)$ & $f(x)$ & $x$  & $xM$  & $g(xM)$ & $f(x)$ \\
+        \hline
+        0000 & (0,0) & 0       & 0      & 1000 & (0,1) & 0       & 0      \\
+        0001 & (1,0) & 1       & 1      & 1001 & (1,1) & 0       & 0      \\
+        0010 & (1,1) & 0       & 0      & 1010 & (1,0) & 1       & 1      \\
+        0011 & (0,1) & 0       & 0      & 1011 & (0,0) & 0       & 0      \\
+        0100 & (1,0) & 1       & 1      & 1100 & (1,1) & 0       & 0      \\
+        0101 & (0,0) & 0       & 0      & 1101 & (0,1) & 0       & 0      \\
+        0110 & (0,1) & 0       & 0      & 1110 & (0,0) & 0       & 0      \\
+        0111 & (1,1) & 0       & 0      & 1111 & (1,0) & 1       & 1      \\
+    \end{tabular}
+\end{center}
+Бачимо, що рівність $f(x) = g(xM)$ (доводилася в задачі 3.3) виконується для всіх значень $x \in V_{4}$.
+
+\subsection{Розв'язання системи \texorpdfstring{$xM = 0$}{xM}}
+Система має наступний вигляд:
+\begin{equation*}
+    xM = 0 = (x_{1}, x_{2}, x_{3}, x_{4}) \cdot \begin{pmatrix}
+        0 & 1 \\
+        1 & 0 \\
+        1 & 1 \\
+        1 & 0
+    \end{pmatrix} \quad\Longleftrightarrow\quad
+    \begin{cases}
+        x_{2} \oplus x_{3} \oplus x_{4} = 0, \\
+        x_{1} \oplus x_{3} = 0.
+    \end{cases}
+\end{equation*}
+У нас два рівняння і 4 невідомих, тому матимемо дві вільні і дві залежні змінні. Вільними оберемо змінні 
+$x_{3}$ і $x_{4}$, а залежні відповідно виразимо: $x_{1} = x_{3}$, $x_{2} = x_{3} \oplus x_{4}$.
+\begin{center}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{cc|cccc}
+        $x_{3}$ & $x_{4}$ & $x_{1}$ & $x_{2}$ & $x_{3}$ & $x_{4}$ \\
+        \hline
+        0       & 0       & 0       & 0       & 0       & 0       \\
+        0       & 1       & 0       & 1       & 0       & 1       \\
+        1       & 0       & 1       & 1       & 1       & 0       \\
+        1       & 1       & 1       & 0       & 1       & 1       \\
+    \end{tabular}
+\end{center}
+Матриця $M$ задає лінійне відображення $V_{4} \rightarrow V_{2}$, а тому існує $\ker M$ -- множна таких векторів, 
+які відображаються в нуль (тобто фактично розв'язки $xM = 0$).
+\begin{equation*}
+    \ker M = \left\{(0000),\; (0101),\; (1011),\; (1110)\right\}
+\end{equation*}
+Отримуємо, що $\ker M = L_{f}$ -- цим ми ще раз перевіряємо, що матриця $M$ побудована правильно.
+
+\subsection{Альтернативний базис та матриця \texorpdfstring{$M'$}{MatrixM}}
